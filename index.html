@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Countdown Timer</title>
+<style>
+    body {
+        font-family: Arial;
+        text-align: center;
+        background: #0f172a;
+        color: white;
+        margin-top: 40px;
+    }
+    input, button {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+    }
+    button {
+        background: #22c55e;
+        color: white;
+        cursor: pointer;
+    }
+    .box {
+        margin-top: 20px;
+        font-size: 22px;
+    }
+</style>
+</head>
+<body>
+
+<h1>🎉 Countdown Timer 🎉</h1>
+
+<h3>🎂 Set Birthday</h3>
+<input type="date" id="birthdayInput">
+<button onclick="saveBirthday()">Save Birthday</button>
+
+<h3>📅 Set Custom Date</h3>
+<input type="date" id="eventInput">
+<button onclick="saveEvent()">Save Event</button>
+
+<div class="box">
+    <h2>🎂 Birthday Countdown</h2>
+    <div id="birthdayCountdown"></div>
+</div>
+
+<div class="box">
+    <h2>📅 Event Countdown</h2>
+    <div id="eventCountdown"></div>
+</div>
+
+<script>
+function saveBirthday() {
+    const date = document.getElementById("birthdayInput").value;
+    if (date) {
+        localStorage.setItem("birthday", date);
+    }
+}
+
+function saveEvent() {
+    const date = document.getElementById("eventInput").value;
+    if (date) {
+        localStorage.setItem("eventDate", date);
+    }
+}
+
+function updateCountdown() {
+    const now = new Date();
+
+    // 🎂 Birthday
+    const bday = localStorage.getItem("birthday");
+    if (bday) {
+        let birthday = new Date(bday);
+        birthday.setFullYear(now.getFullYear());
+
+        if (birthday < now) {
+            birthday.setFullYear(now.getFullYear() + 1);
+        }
+
+        document.getElementById("birthdayCountdown").innerHTML =
+            formatTime(birthday - now);
+    }
+
+    // 📅 Event
+    const event = localStorage.getItem("eventDate");
+    if (event) {
+        let eventDate = new Date(event);
+
+        document.getElementById("eventCountdown").innerHTML =
+            formatTime(eventDate - now);
+    }
+}
+
+function formatTime(diff) {
+    if (diff <= 0) return "🎉 Time's up!";
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+</script>
+
+</body>
+                       </html>
